@@ -13,7 +13,6 @@ to-do:
 
 /* disabled / flat / textured / wireframe / glass / animated */
 
-// s/o: azex
 void PlayerChams(void* thisptr, void* edx, DrawModelResults_t *pResults, const DrawModelInfo_t& info, matrix3x4_t *pBoneToWorld, float *pFlexWeights,
 	float *pFlexDelayedWeights, const Vector &modelOrigin, int flags);
 
