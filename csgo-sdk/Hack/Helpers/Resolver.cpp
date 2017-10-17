@@ -5,7 +5,7 @@ enum CCSGOAnimStatePoses
 	ACT_CSGO_IDLE_TURN_BALANCEADJUST = 979,
 };
 
-void CResolver::Resolve_Nospread(CBaseEntity* pEntity) // this is aimwares old nospread resolver i got from senator ok?
+void CResolver::Resolve_Nospread(CBaseEntity* pEntity) 
 {
 	auto record = Backtracking->arr_infos.at(pEntity->GetIndex());
 
