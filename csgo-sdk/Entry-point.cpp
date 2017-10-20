@@ -14,7 +14,6 @@ std::unique_ptr<CHook> EngineTrace;
 std::unique_ptr<CHook> EngineClient;
 std::unique_ptr<CHook> Prediction;
 std::unique_ptr<CHook> GameEvents;
-std::unique_ptr<CHook> FireBullet;
 std::unique_ptr<CHook> StudioRender;
 std::unique_ptr<CHook> MDLCache;
 
@@ -67,16 +66,11 @@ void SetupHooks() {
 	StudioRender = std::make_unique<CHook>(Interfaces->StudioRender);
 	MDLCache = std::make_unique<CHook>(Interfaces->MdlCache);
 
-	static auto fire_bullets = *reinterpret_cast<C_TEFireBullets**>(Util::FindPattern("client.dll", "55 8B EC 51 53 56 8B F1 BB") + 0x131);
-
-	FireBullet = std::make_unique<CHook>(fire_bullets);
-
 	oEndScene = D3D9->HookMethod<EndSceneFn>(Hooks::EndScene, 42);
 
 	while (!m_pMenu || !m_pMenu->initialized)
 		Sleep(200);
 
-	oFireBullet = FireBullet->HookMethod<FireBullets_t>(Hooks::DETOUR_FireBulletPostDataUpdate, 7);
 	oPaintTraverse = VPanel->HookMethod<PaintTraverseFn>(Hooks::PaintTraverse, 41);
 	oCreateMove = ClientMode->HookMethod<CreateMoveFn>(Hooks::CreateMove, 24);
 	oOverrideView = ClientMode->HookMethod<OverrideViewFn>(Hooks::OverrideView, 18);
@@ -102,14 +96,6 @@ void Setup() {
 
 	SetupExports();
 	Interfaces;
-
-	//if (Interfaces->EngineClient->GetEngineBuildNumber() != 13605)
-	//{
-	//	Beep(750, 500);
-	//	Beep(750, 500);
-	//	Beep(750, 500);
-	//	exit(0);
-	//}
 
 	Netvars;
 	offsets;
@@ -143,7 +129,6 @@ void Terminate() {
 	EngineTrace->Unhook();
 	Prediction->Unhook();
 	GameEvents->Unhook();
-	FireBullet->Unhook();
 	StudioRender->Unhook();
 
 	SetWindowLongPtr(G::Window, GWL_WNDPROC, (LONG_PTR)oWndProc);
